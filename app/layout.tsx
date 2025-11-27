@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   title: "Auth App - Secure Login",
   description:
     "A secure and modern authentication application built with Next.js.",
+  icons: "./icon.png",
   openGraph: {
     title: "AuthApp - Secure Login",
     description: "Experience secure and seamless authentication with AuthApp.",
