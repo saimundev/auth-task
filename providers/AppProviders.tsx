@@ -3,6 +3,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,11 +15,12 @@ const queryClient = new QueryClient({
 });
 
 export const AppProviders = ({ children }: { children: ReactNode }) => {
- 
   return (
     <QueryClientProvider client={queryClient}>
-       {children}
-       <Toaster />
+      <TooltipProvider>
+        {children}
+        <Toaster position="top-center"/>
+      </TooltipProvider>
     </QueryClientProvider>
   );
 };

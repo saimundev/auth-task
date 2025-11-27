@@ -9,11 +9,7 @@ import { toast } from "sonner";
 
 type HttpMethod = "post" | "put" | "delete";
 interface UseAppMutationOptions<TData, TError, TVariables>
-  extends UseMutationOptions<
-    SuccessResponse<TData>,
-    AxiosError<TError>,
-    TVariables
-  > {
+  extends UseMutationOptions<TData, AxiosError<TError>, TVariables> {
   url: string;
   method?: HttpMethod;
   invalidateKeys?: string[];
@@ -24,14 +20,12 @@ export function useAppMutation<TData, TError = Error, TVariables = unknown>(
 ) {
   const queryClient = useQueryClient();
   const { url, method = "post", invalidateKeys, ...restOptions } = options;
-  return useMutation<SuccessResponse<TData>, AxiosError<TError>, TVariables>({
+  return useMutation<TData, AxiosError<TError>, TVariables>({
     mutationFn: (variables: TVariables) => {
-      return api[method]<SuccessResponse<TData>>(url, variables).then(
-        (res) => res.data
-      );
+      return api[method]<TData>(url, variables).then((res) => res.data);
     },
     onSuccess: async (data) => {
-      toast.success(data?.message || "Operation successful");
+      toast.success("Login successfully");
       if (invalidateKeys?.length) {
         await Promise.all(
           invalidateKeys.map((key) =>

@@ -1,13 +1,16 @@
+
 import api from "@/lib/client";
-import {
-  useQuery,
-  type UseQueryOptions,
-} from "@tanstack/react-query";
+import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
+interface SuccessResponse<TData> {
+  message: string;
+  data: TData;
+}
 
 interface UseAppQueryOptions<TData, TError>
   extends Omit<
-    UseQueryOptions<SuccessResponse<TData>, AxiosError<TError>>,
+    UseQueryOptions<TData, AxiosError<TError>>,
     "queryKey" | "queryFn"
   > {
   queryKey: (string | unknown)[];
@@ -16,17 +19,16 @@ interface UseAppQueryOptions<TData, TError>
   params?: Record<string, any>;
 }
 
-export function useAppQuery<
-  TData,
-  TError = { message?: string }
->(options: UseAppQueryOptions<TData, TError>) {
+export function useAppQuery<TData, TError = { message?: string }>(
+  options: UseAppQueryOptions<TData, TError>
+) {
   const { queryKey, url, enabled = true, params, ...restOptions } = options;
 
-  return useQuery<SuccessResponse<TData>, AxiosError<TError>>({
-    queryKey: [...queryKey, params], 
+  return useQuery<TData, AxiosError<TError>>({
+    queryKey: [...queryKey, params],
     queryFn: async () => {
       try {
-        const res = await api.get<SuccessResponse<TData>>(url, { params });
+        const res = await api.get<TData>(url, { params });
         return res.data;
       } catch (error) {
         const err = error as AxiosError<{ message?: string }>;
