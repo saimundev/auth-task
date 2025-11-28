@@ -35,8 +35,9 @@ export function useAppMutation<TData, TError = Error, TVariables = unknown>(
       }
     },
     onError: (error) => {
-      const err = error as AxiosError<{ message?: string }>;
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      console.log("error", error);
+      const err = error as AxiosError<{ error?: string }>;
+      toast.error(err?.response?.data?.error || "Something went wrong");
     },
     ...restOptions,
   });
